@@ -12,17 +12,35 @@ const App = () => {
 		'The only way to go fast, is to go well.',
 	];
 
+	const [points, setPoints] = useState({});
+
 	const [selected, setSelected] = useState(0);
 
-	const handleClick = (e) => {
+	const handleNextClick = (e) => {
 		const newSelected = Math.floor(Math.random() * anecdotes.length);
 		setSelected(newSelected);
 	};
 
+	const handleVoteClick = (e) => {
+		const newPoints = { ...points };
+		newPoints[selected] =
+			newPoints[selected] === undefined
+				? 1
+				: (newPoints[selected] += 1);
+
+		setPoints(newPoints);
+	};
+
 	return (
 		<>
-			<div>{anecdotes[selected]}</div>
-			<button onClick={handleClick}>next anectdote</button>
+			<div>
+				<p>{anecdotes[selected]}</p>
+				{points[selected] > 0 && <p>has {points[selected]} votes</p>}
+			</div>
+			<div>
+				<button onClick={handleVoteClick}>vote</button>
+				<button onClick={handleNextClick}>next anectdote</button>
+			</div>
 		</>
 	);
 };
