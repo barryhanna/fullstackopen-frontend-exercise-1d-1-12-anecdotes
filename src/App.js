@@ -17,7 +17,11 @@ const App = () => {
 	const [selected, setSelected] = useState(0);
 
 	const handleNextClick = (e) => {
-		const newSelected = Math.floor(Math.random() * anecdotes.length);
+		let newSelected = Math.floor(Math.random() * anecdotes.length);
+		// avoid the same anectode being selected twice in a row
+		while (selected === newSelected) {
+			newSelected = Math.floor(Math.random() * anecdotes.length);
+		}
 		setSelected(newSelected);
 	};
 
@@ -31,6 +35,19 @@ const App = () => {
 		setPoints(newPoints);
 	};
 
+	const getHighestVoted = () => {
+		const [mostVoted] = [...Object.entries(points)].sort(
+			(a, b) => b[1] - a[1]
+		);
+
+		console.log(mostVoted);
+
+		return {
+			mostVoted: anecdotes[mostVoted[0]],
+			votes: mostVoted[1],
+		};
+	};
+
 	return (
 		<>
 			<div>
@@ -41,6 +58,14 @@ const App = () => {
 				<button onClick={handleVoteClick}>vote</button>
 				<button onClick={handleNextClick}>next anectdote</button>
 			</div>
+			{Object.entries(points).length ? (
+				<div>
+					<p>{getHighestVoted().mostVoted}</p>
+					<p>has {getHighestVoted().votes} votes</p>
+				</div>
+			) : (
+				''
+			)}
 		</>
 	);
 };
